@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../widgets/photo_preview.dart';
 import '../widgets/custom_close_button.dart';
+import '../widgets/photo_preview.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -68,22 +68,22 @@ class ProfileScreen extends StatelessWidget {
                     childAspectRatio: .6189,
                     crossAxisSpacing: 26,
                     children: [
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 26),
-                        child: const PhotoPreview(),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 26),
-                        child: const PhotoPreview(),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 26),
-                        child: const PhotoPreview(),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 26),
-                        child: const PhotoPreview(),
-                      ),
+                      // Container(
+                      //   margin: const EdgeInsets.only(bottom: 26),
+                      //   child: const PhotoPreview(),
+                      // ),
+                      // Container(
+                      //   margin: const EdgeInsets.only(top: 26),
+                      //   child: const PhotoPreview(),
+                      // ),
+                      // Container(
+                      //   margin: const EdgeInsets.only(bottom: 26),
+                      //   child: const PhotoPreview(),
+                      // ),
+                      // Container(
+                      //   margin: const EdgeInsets.only(top: 26),
+                      //   child: const PhotoPreview(),
+                      // ),
                     ],
                   ),
                 ],
