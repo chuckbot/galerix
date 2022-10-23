@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:galerix/widgets/image_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../api/galerix_api.dart';
-import '../models/unsplash_image.dart';
+import 'package:provider/provider.dart';
+import '../providers/galerix_provider.dart';
 import 'home_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -14,22 +14,23 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final List<UnsplashImage> _images = [];
   final ScrollController _scrollController = ScrollController();
   int _nextPage = 0;
   bool _showAppbarTitle = false;
+  late GalerixProvider _galerixProvider;
 
   @override
   void initState() {
     super.initState();
-    _getRandomImages();
+    _galerixProvider = Provider.of<GalerixProvider>(context, listen: false);
+    _galerixProvider.loadHomeImages();
     _scrollController.addListener(() {
       // It starts to load the images before reaching the end of the scroll.
       if (_scrollController.offset >
               (_scrollController.position.maxScrollExtent - 512) &&
           !_scrollController.position.outOfRange) {
         _nextPage++;
-        _getRandomImages(_nextPage);
+        _galerixProvider.loadHomeImages(_nextPage);
       }
       if (_scrollController.offset > 120) {
         setState(() => _showAppbarTitle = true);
@@ -43,12 +44,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _getRandomImages([int page = 0]) {
-    GalerixApi().getRandomImages(page: page).then((images) {
-      setState(() => _images.addAll(images));
-    });
   }
 
   @override
@@ -114,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       CircleAvatar(
                         radius: 31.5,
-                        child: Image.asset('assets/png/user.png'),
+                        child: Image.asset('assets/img/user.png'),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -156,7 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          ImageList(images: _images),
+          const ImageList(),
         ],
       ),
     );

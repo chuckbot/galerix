@@ -1,7 +1,18 @@
+import 'package:galerix/providers/galerix_provider.dart';
 import 'package:galerix/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(const Galerix());
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => GalerixProvider()),
+      ],
+      child: const Galerix(),
+    ),
+  );
+}
 
 class Galerix extends StatelessWidget {
   const Galerix({super.key});

@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'dart:math' as math;
-import 'package:galerix/api/galerix_api.dart';
-import 'package:galerix/models/unsplash_image.dart';
+import 'package:galerix/providers/galerix_provider.dart';
 import 'package:galerix/widgets/image_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,21 +14,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<UnsplashImage> _images = [];
   final ScrollController _scrollController = ScrollController();
   int _nextPage = 0;
+  late GalerixProvider _galerixProvider;
 
   @override
   void initState() {
     super.initState();
-    _getRandomImages();
+    _galerixProvider = Provider.of<GalerixProvider>(context, listen: false);
+    _galerixProvider.loadHomeImages();
     _scrollController.addListener(() {
       // It starts to load the images before reaching the end of the scroll.
       if (_scrollController.offset >
               (_scrollController.position.maxScrollExtent - 512) &&
           !_scrollController.position.outOfRange) {
         _nextPage++;
-        _getRandomImages(_nextPage);
+        _galerixProvider.loadHomeImages(_nextPage);
       }
     });
   }
@@ -37,12 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _getRandomImages([int page = 0]) {
-    GalerixApi().getRandomImages(page: page).then((images) {
-      setState(() => _images.addAll(images));
-    });
   }
 
   @override
@@ -95,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          ImageList(images: _images)
+          const ImageList(),
         ],
       ),
     );
