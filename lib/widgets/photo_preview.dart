@@ -5,13 +5,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class PhotoPreview extends StatelessWidget {
-  const PhotoPreview({super.key, required this.image, required this.index});
+  const PhotoPreview({
+    super.key,
+    required this.image,
+    required this.index,
+    required this.homeImages,
+  });
 
   final UnsplashImage image;
   final int index;
+  final bool homeImages;
 
   static const double _aspectRadio = 1.4437;
-  static const double _aspectRadioShadow = .3907;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +25,11 @@ class PhotoPreview extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => DetailScreen(initialPage: index),
+          SlowerPageRoute(
+            builder: (_) => DetailScreen(
+              initialPage: index,
+              homeImages: homeImages,
+            ),
           ),
         );
       },
@@ -32,7 +40,7 @@ class PhotoPreview extends StatelessWidget {
           imageBuilder: (_, imageProvider) => Stack(
             children: [
               Hero(
-                tag: image.id,
+                tag: image.heroId,
                 child: Image(
                   image: imageProvider,
                   fit: BoxFit.cover,
@@ -46,7 +54,6 @@ class PhotoPreview extends StatelessWidget {
                   from: 12,
                   child: Container(
                     width: imageWidth,
-                    height: imageWidth * _aspectRadioShadow,
                     padding: const EdgeInsets.fromLTRB(12, 19, 21, 9),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -60,20 +67,22 @@ class PhotoPreview extends StatelessWidget {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          'Sky Line',
-                          style: TextStyle(
+                          image.description,
+                          maxLines: 2,
+                          style: const TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 12,
                             height: 1.17,
                             color: Colors.white,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Text(
-                          '50 votos',
-                          style: TextStyle(
+                          '${image.likes} votos',
+                          style: const TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 8,
                             height: 1.17,
@@ -102,11 +111,16 @@ class PhotoPreview extends StatelessWidget {
               ),
             ),
           ),
-          errorWidget: (_, __, ___) => const Center(
-            child: Icon(Icons.error),
-          ),
+          errorWidget: (_, __, ___) => const Center(child: Icon(Icons.error)),
         ),
       ),
     );
   }
+}
+
+class SlowerPageRoute extends MaterialPageRoute {
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 500);
+
+  SlowerPageRoute({builder}) : super(builder: builder);
 }

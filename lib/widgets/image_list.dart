@@ -4,13 +4,18 @@ import 'package:provider/provider.dart';
 import 'photo_preview.dart';
 
 class ImageList extends StatelessWidget {
-  const ImageList({super.key});
+  const ImageList({super.key, this.homeImages = true});
+
+  final bool homeImages;
 
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.all(26),
       sliver: Consumer<GalerixProvider>(builder: (_, galerixProvider, __) {
+        final images = homeImages
+            ? galerixProvider.homeImages
+            : galerixProvider.userImages;
         return SliverGrid(
           delegate: SliverChildBuilderDelegate(
             (_, index) {
@@ -21,12 +26,13 @@ class ImageList extends StatelessWidget {
                   top: isEven ? 0 : 26,
                 ),
                 child: PhotoPreview(
-                  image: galerixProvider.images[index],
+                  image: images[index],
                   index: index,
+                  homeImages: homeImages,
                 ),
               );
             },
-            childCount: galerixProvider.images.length,
+            childCount: images.length,
           ),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
